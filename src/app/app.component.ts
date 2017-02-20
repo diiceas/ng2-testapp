@@ -1,14 +1,10 @@
 import { Component } from '@angular/core';
 import { Hero } from './hero'
-
-const HEROES: Hero[] = [
-  { id: 11, name: 'Mr. Nice' },
-  { id: 12, name: 'Narco' }
-];
+import { HeroService } from './hero.service'
 
 @Component({
   selector: 'my-app',
-  template:`
+  template: `
   <h2>My Heroes</h2>
   <ul class="heroes">
     <li *ngFor="let hero of heroes" 
@@ -67,13 +63,24 @@ const HEROES: Hero[] = [
     margin-right: .8em;
     border-radius: 4px 0 0 4px;
   }
-`]
+`],
+  providers: [HeroService]
 })
-export class AppComponent  { 
+export class AppComponent {
+  constructor(private heroservice: HeroService) { }
+
   title = "Tour of Heroes";
   selectedHero: Hero;
-  heroes = HEROES;
+  heroes: Hero[];
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
+  }
+
+  getHeroes(): void {
+    this.heroservice.getHeroesSlowly().then(heroes => this.heroes = heroes);
+  }
+
+  ngOnInit(): void {
+    this.getHeroes();
   }
 }
